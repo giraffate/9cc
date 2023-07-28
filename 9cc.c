@@ -98,7 +98,7 @@ Token *tokenize() {
             continue;
         }
 
-        if (*p == '+' || *p == '-') {
+        if (strchr("+-*/()", *p)) {
             cur = new_token(TK_RESERVED, cur, p++);
             continue;
         }
@@ -157,24 +157,45 @@ Node *new_num(int val) {
 }
 
 Node *expr();
-Node *num();
+Node *mul();
+Node *primary();
 
 // expr = num ("+" num | "-" num)*
 Node *expr() {
-    Node *node = num();
+    Node *node = mul();
 
     for (;;) {
         if (consume('+'))
-            node = new_binary(ND_ADD, node, num());
+            node = new_binary(ND_ADD, node, mul());
         else if (consume('-'))
-            node = new_binary(ND_SUB, node, num());
+            node = new_binary(ND_SUB, node, mul());
         else
             return node;
     }
 }
 
-// num
-Node *num() {
+// mul = primary ("*" primary | "/" primary)*
+Node *mul() {
+    Node *node = primary();
+
+    for (;;) {
+        if (consume('*'))
+            node = new_binary(ND_MUL, node, primary());
+        else if (consume('/'))
+            node = new_binary(ND_DIV, node, primary());
+        else
+            return node;
+    }
+}
+
+// primary = "(" expr ")" | num
+Node *primary() {
+    if (consume('(')) {
+        Node *node = expr();
+        expect(')');
+        return node;
+    }
+
     return new_num(expect_number());
 }
 
@@ -200,6 +221,13 @@ void gen(Node *node) {
         break;
     case ND_SUB:
         printf("  sub rax, rdi\n");
+        break;
+    case ND_MUL:
+        printf("  imul rax, rdi\n");
+        break;
+    case ND_DIV:
+        printf(" cqo\n");
+        printf("  idiv rdi\n");
         break;
     }
 
