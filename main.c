@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
 
     // Tokenize and parse.
     tokenize(argv[1]);
-    Node *node = expr();
+    Node *node = stmt();
 
     // Print out the first half of assembly.
     printf(".intel_syntax noprefix\n");

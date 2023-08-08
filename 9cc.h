@@ -51,6 +51,7 @@ struct Node {
     int val;       // Used if kind == ND_NUM
 };
 
+Node *stmt();
 Node *expr();
 Node *equality();
 Node *relational();

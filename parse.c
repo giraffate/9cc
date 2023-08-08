@@ -88,7 +88,7 @@ Token *tokenize(char *p) {
             p +=2;
         }
 
-        if (strchr("+-*/()<>", *p)) {
+        if (strchr("+-*/()<>;", *p)) {
             cur = new_token(TK_RESERVED, cur, p++, 1);
             continue;
         }
@@ -128,6 +128,16 @@ Node *new_binary(NodeKind kind, Node *lhs, Node *rhs) {
 Node *new_num(int val) {
     Node *node = new_node(ND_NUM);
     node->val = val;
+    return node;
+}
+
+// stmt = expr ";"
+Node *stmt() {
+    Node *node = expr();
+
+    if (!consume(";"))
+        error("';' is needed for expression");
+
     return node;
 }
 
