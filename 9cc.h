@@ -13,6 +13,7 @@
 
 typedef enum {
     TK_RESERVED,
+    TK_IDENT,
     TK_NUM,
     TK_EOF,
 } TokenKind;
@@ -39,6 +40,8 @@ typedef enum {
     ND_NE, // !=
     ND_LT, // <
     ND_LE, // <=
+    ND_ASSIGN, // =
+    ND_LVAR, // Local variable
     ND_NUM, // Integer
 } NodeKind;
 
@@ -49,10 +52,12 @@ struct Node {
     Node *lhs;     // Left-hand side
     Node *rhs;     // Right-hand side
     int val;       // Used if kind == ND_NUM
+    int offset;    // Used if kind == ND_LVAR
 };
 
 Node *stmt();
 Node *expr();
+Node *assign();
 Node *equality();
 Node *relational();
 Node *add();
