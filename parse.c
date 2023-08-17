@@ -140,6 +140,14 @@ Node *new_num(int val) {
     return node;
 }
 
+// program = stmt*
+void program() {
+    int i = 0;
+    while(!at_eof())
+        code[i++] = stmt();
+    code[i] = NULL;
+}
+
 // stmt = expr ";"
 Node *stmt() {
     Node *node = expr();

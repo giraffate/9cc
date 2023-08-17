@@ -55,6 +55,7 @@ struct Node {
     int offset;    // Used if kind == ND_LVAR
 };
 
+void program();
 Node *stmt();
 Node *expr();
 Node *assign();
@@ -64,6 +65,8 @@ Node *add();
 Node *mul();
 Node *unary();
 Node *primary();
+
+extern Node *code[100];
 
 //
 // codegen.c
